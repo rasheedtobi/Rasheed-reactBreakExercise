@@ -1,154 +1,20 @@
-// import React, { useState } from "react"
-// import ProductData from "./ProductData"
-// import './styles.css'
 
-
-
-// const Product = () => {
-//   const [detail, setDetail] = useState([]);
-//   const detailPage = (Product) => {
-//     setDetail([{...Product}])
-//   }
-//   return (
-//     <>
-//     <div className="detail-container">
-//       <div className="detail-content">
-//         {
-//           detail.map((y) =>
-//           {
-//             return(
-//               <>
-//               <div className="detail-info">
-//                 <div className="img-box">
-//                   <img src={y.url} alt={y.name}></img>
-//                   <div className="product-detail">
-//                     <h3> {y.name}</h3>
-//                     <h4>{y.category}</h4>
-//                     <p>{y.description}</p>
-//                   </div>
-//                 </div>
-//               </div>
-//               </>
-//             )
-//           }
-//           )
-
-//         }
-//       </div>
-//     </div>
-//     <div className="container"> {
-//       ProductData.map((curElm) =>
-//       {
-//         return (
-//           <>
-//           <div className="box">
-//             <div className="content">
-//               <div className="img-box">
-//                 <img src = {curElm.url} alt={curElm.name}></img>
-//                 <div className="detail">
-//                   <div className="info">
-//                     <h3> {curElm.name}</h3>
-//                     <p>{curElm.category}</p>
-
-//                   </div>
-//                   <div className="button">
-//                     <button onClick={()=>detailPage(curElm)}>View</button>
-//                   </div>
-
-//                 </div>
-
-//               </div>
-
-//             </div>
-
-//           </div>
-//           </>
-//         )
-//       }
-//       )
-//     }
-
-
-//     </div>
-//     </>
-//   )
-// }
-// export default Product
-
-// import React, { useState } from "react";
-// import ProductData from "./ProductData";
-// import './styles.css';
-
-// const Product = () => {
-//   const [detail, setDetail] = useState([]);
-//   const [flaggedProducts, setFlaggedProducts] = useState([]);
-
-//   const detailPage = (product) => {
-//     setDetail([{...product, isFlagged: flaggedProducts.includes(product.id)}]);
-//   };
-
-//   const flagProduct = (productId) => {
-//     console.log(`Product flagged: ${productId}`);
-//     setFlaggedProducts([...flaggedProducts, productId]);
-//   };
-
-//   return (
-//     <>
-//       <div className="detail-container">
-//         <div className="detail-content">
-//           {detail.map((product) => (
-//             <div key={product.id} className="detail-info">
-//               <div className="img-box">
-//                 <img src={product.url} alt={product.name}></img>
-//                 <div className="product-detail">
-//                   <h3>{product.name}</h3>
-//                   <h4>{product.category}</h4>
-//                   <p>{product.description}</p>
-//                   {product.isFlagged && <p>Flagged</p>}
-//                 </div>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//       <div className="container">
-//         {ProductData.map((product) => (
-//           <div key={product.id} className="box">
-//             <div className="content">
-//               <div className="img-box">
-//                 <img src={product.url} alt={product.name}></img>
-//                 <div className="detail">
-//                   <div className="info">
-//                     <h3>{product.name}</h3>
-//                     <p>${product.price}</p>
-//                   </div>
-//                   <div className="buttons">
-//                     <button onClick={() => detailPage(product)}>View</button>
-//                     <button onClick={() => flagProduct(product.id)}>Flag</button>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Product;
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProductData from "./ProductData";
 import './styles.css';
 
 const Product = () => {
   const [detail, setDetail] = useState([]);
   const [flaggedProducts, setFlaggedProducts] = useState([]);
-  const [sortOption, setSortOption] = useState("name"); // Default sort by name
-  const [sortOrder, setSortOrder] = useState("asc"); // Default sort in ascending order
+  const [sortOption, setSortOption] = useState("name");
+  const [sortOrder, setSortOrder] = useState("asc"); 
   const [categoryFilter, setCategoryFilter] = useState(null);
   const [flaggedFilter, setFlaggedFilter] = useState(false);
+
+  useEffect(() => {
+    const storedFlaggedProducts = JSON.parse(localStorage.getItem("flaggedProducts")) || [];
+    setFlaggedProducts(storedFlaggedProducts);
+  }, []);
 
   const sortProducts = (a, b) => {
     const aValue = a[sortOption];
@@ -162,19 +28,24 @@ const Product = () => {
   };
 
   const filteredProducts = ProductData
-    .filter(product => (!categoryFilter || product.category === categoryFilter) &&
-                       (!flaggedFilter || flaggedProducts.includes(product.id)))
+    .filter(prod => (!categoryFilter || prod.category === categoryFilter) &&
+                       (!flaggedFilter || flaggedProducts.includes(prod.id)))
     .sort(sortProducts);
 
   const detailPage = (product) => {
     setDetail([{...product, isFlagged: flaggedProducts.includes(product.id)}]);
   };
 
-  const flagProduct = (productId) => {
-    
-    console.log(`Product flagged: ${productId}`);
-    setFlaggedProducts([...flaggedProducts, productId]);
+ const flagProduct = (productId) => {
+    if (!flaggedProducts.includes(productId)) {     
+      setFlaggedProducts([...flaggedProducts, productId]);
+      localStorage.setItem("flaggedProducts", JSON.stringify([...flaggedProducts, productId]));
+    }
+
+    setDetail([{...ProductData.find(product => product.id === productId), isFlagged: true}]);
   };
+
+  
 
   return (
     <>
@@ -206,7 +77,7 @@ const Product = () => {
         </label>
 
         <label>
-          Filter by Flagged:
+          Favorites:
           <input
             type="checkbox"
             checked={flaggedFilter}
@@ -242,11 +113,11 @@ const Product = () => {
                 <div className="detail">
                   <div className="info">
                     <h3>{product.name}</h3>
-                    <p> ${product.price}</p>
+                    <p> €{product.price}</p>
                   </div>
                   <div className="buttons">
                     <button onClick={() => detailPage(product)}>View</button>
-                    <button onClick={() => flagProduct(product.id)}>Flag</button>
+                    <button className = "fav" onClick={() => flagProduct(product.id)}>Mark as Favorite</button>
                   </div>
                 </div>
               </div>
@@ -254,8 +125,6 @@ const Product = () => {
           </div>
         ))}
       </div>
-
-      
     </>
   );
 };

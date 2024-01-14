@@ -93,7 +93,11 @@
    outline: none;
    background: green;
    cursor: grab;
-   margin-right: 20px;
+   margin: 5px;
+}
+
+.container .box .content .detail .buttons button.fav {
+   background-color: red;
 }
 
 .detail-container {
