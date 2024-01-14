@@ -1,0 +1,105 @@
+* {
+   padding: 0;
+   margin: 0;
+   box-sizing: border-box;
+   font-family: sans-serif;
+}
+
+.header {
+   padding: 30px 40px;
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+   box-shadow: rgba(26, 25, 25, 0.35) 0px 5px 15px;
+
+
+}
+
+.header .logo h2 {
+   color: rgb(211, 180, 6);
+   font-size: 40pt;
+   cursor: pointer;
+}
+
+.header .logo h2 span {
+   color: rgb(255, 146, 127);
+   font-size: larger;
+}
+
+.header ul {
+   display: flex;
+   padding-top: 30px;
+}
+
+.header ul li {
+   margin-right: 20px;
+   list-style: none;
+
+}
+
+.header ul li a {
+   text-decoration: none;
+   color: blueviolet;
+   font-size: 15pt;
+}
+
+.container {
+   width: 100%;
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-evenly;
+   margin-top: 30px;
+   padding: 10px 20px;
+
+}
+
+.container .box {
+   width: 280px;
+   height: 400px;
+   overflow: hidden;
+   margin-top: 20px;
+   background: #e8e8e8;
+   padding: 10px 20px;
+   margin-left: 20px;
+   cursor: pointer;
+
+}
+
+.container .box .content {
+   align-items: center;
+   max-width: 100%;
+}
+
+/* .container .box .content .img-box img {
+   width: 150px;
+   height: 150px;
+} */
+
+.container .box .content .detail .info {
+   display: flex;
+   justify-content: space-between;
+
+}
+
+.container .box .content .detail .info h3 {
+   color: maroon;
+   font-weight: 200;
+}
+
+.container .box .content .detail button {
+   padding: 10px 20px;
+   color: bisque;
+   border: none;
+   outline: none;
+   background: green;
+   cursor: grab;
+   margin-right: 20px;
+}
+
+.detail-container {
+   margin: 10px 20px;
+}
+
+.sorting-filtering {
+   margin: 50px 20px;
+}
